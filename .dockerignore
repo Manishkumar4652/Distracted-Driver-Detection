@@ -1,0 +1,8 @@
+state-farm-distracted-driver-detection/
+.git/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.mp4
+!demo_on_video/input_video.mp4

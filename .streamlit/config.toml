@@ -1,0 +1,17 @@
+[general]
+email = ""
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = false
+enableCORS = false
+enableXsrfProtection = false
+
+[theme]
+primaryColor = "#DC2626"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#FFF5F5"
+textColor = "#0F172A"
+font = "sans serif"

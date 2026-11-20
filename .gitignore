@@ -1,0 +1,32 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+distracted_env/
+env/
+venv/
+.venv/
+ENV/
+
+# Large Dataset (Keep locally, do not push 2GB+ to GitHub)
+state-farm-distracted-driver-detection/
+*.zip
+*.tar.gz
+
+# Streamlit secrets and cache
+.streamlit/secrets.toml
+.streamlit/credentials.toml
+
+# Temporary output videos and files
+temp_test_video.mp4
+output_annotated.mp4
+output_demo.mp4
+detected_driver_*.mp4
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
