@@ -1,6 +1,7 @@
 # 🌐 Deployment Guide - Distracted Driver Detection
 
-This guide provides simple, step-by-step instructions to deploy your **GuardianEye Distracted Driver Detection Dashboard** so anyone can access it via a live public link.
+> 🚀 **Live Production URL:** **[https://distracted-driver-manish.streamlit.app/](https://distracted-driver-manish.streamlit.app/)**  
+> Currently deployed and active on Streamlit Community Cloud.
 
 ---
 

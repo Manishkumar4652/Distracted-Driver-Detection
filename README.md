@@ -4,8 +4,12 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-orange.svg)](https://streamlit.io/)
 [![Status](https://img.shields.io/badge/Status-Fully%20Working%20%E2%9C%85-brightgreen.svg)](#)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://distracted-driver-manish.streamlit.app/)
 
 An intelligent in-cabin driver monitoring computer vision system that detects and classifies distracted driving behaviors in real time from dashboard camera feeds and images.
+
+> 🚀 **Live Demo:** Try the deployed dashboard directly in your browser without any installation:  
+> 👉 **[https://distracted-driver-manish.streamlit.app/](https://distracted-driver-manish.streamlit.app/)**
 
 ---
 
