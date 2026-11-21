@@ -41,6 +41,9 @@ CLASS_MAP = {
 
 CLASS_KEYS = [f"c{i}" for i in range(10)]
 
+# Below this confidence (%) the prediction is flagged as unreliable in the UI
+LOW_CONFIDENCE_THRESHOLD = 50.0
+
 # Preprocessing transform for EfficientNet
 EFFICIENTNET_TRANSFORM = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -146,6 +149,7 @@ def predict_efficientnet(image_input):
         "confidence": float(probs[pred_idx] * 100.0),
         "is_distracted": info["distracted"],
         "probabilities": probabilities,
+        "low_confidence": float(probs[pred_idx] * 100.0) < LOW_CONFIDENCE_THRESHOLD,
         "inference_ms": round(inference_time, 2)
     }
 
@@ -182,6 +186,7 @@ def predict_yolo(image_input):
         "confidence": round(conf, 2),
         "is_distracted": is_distracted,
         "probabilities": probabilities,
+        "low_confidence": conf < LOW_CONFIDENCE_THRESHOLD,
         "inference_ms": round(inference_time, 2)
     }
 

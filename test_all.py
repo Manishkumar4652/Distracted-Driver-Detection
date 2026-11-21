@@ -31,14 +31,27 @@ def run_tests():
     print(f"  -> YOLO weights: {os.path.getsize('model/yolo_distraction_s.pt')/(1024*1024):.1f} MB [PASSED] ✅")
     passed_count += 1
 
-    # Test 3: EfficientNet Prediction
-    print("\n[Test 3/6] Testing 10-Class EfficientNet Inference...")
+    # Test 3: EfficientNet Prediction on ALL labelled sample images
+    print("\n[Test 3/6] Testing 10-Class EfficientNet Inference on all labelled samples...")
     from src.model_loader import predict_driver_state
+    labelled = {
+        "images/img_22_SAFE_DRIVING.jpg": "c0",
+        "images/img_12_TEXTING_RIGHT.jpg": "c1",
+        "images/img_10_OPERATING_RADIO.jpg": "c5",
+        "images/img_30_REACHING_BEHIND.jpg": "c7",
+    }
+    correct = 0
+    for path, expected in labelled.items():
+        r = predict_driver_state(path, model_type="efficientnet")
+        ok = r["class_code"] == expected
+        correct += ok
+        print(f"  -> {os.path.basename(path):<34} expected {expected}, got {r['class_code']} ({r['confidence']:.1f}%) {'OK' if ok else 'WRONG'}")
+    assert correct >= 3, f"Only {correct}/{len(labelled)} sample images correct"
+    if correct < len(labelled):
+        print(f"  [WARN] {len(labelled) - correct} sample image(s) misclassified - run evaluate.py on held-out drivers for real metrics.")
     test_img = "images/img_12_TEXTING_RIGHT.jpg"
     res = predict_driver_state(test_img, model_type="efficientnet")
-    assert res["class_code"] == "c1", f"Expected c1, got {res['class_code']}"
-    assert res["is_distracted"] is True, "Expected is_distracted=True"
-    print(f"  -> Prediction on {test_img}: {res['class_name']} ({res['confidence']:.1f}%) in {res['inference_ms']}ms [PASSED] ✅")
+    print(f"  -> Sample accuracy: {correct}/{len(labelled)} | latency {res['inference_ms']}ms [PASSED] ✅")
     passed_count += 1
 
     # Test 4: YOLO Real-Time Prediction
@@ -83,7 +96,8 @@ def run_tests():
     passed_count += 1
 
     print("\n" + "=" * 65)
-    print(f" 🎉 ALL {passed_count}/{total_tests} TESTS PASSED SUCCESSFULLY! PROJECT IS 100% READY!")
+    print(f" ✅ {passed_count}/{total_tests} smoke tests passed (pipeline works end-to-end).")
+    print(" ℹ️  Smoke tests do NOT measure accuracy. Use: python evaluate.py --data <heldout_dir>")
     print("=" * 65)
 
 if __name__ == "__main__":

@@ -91,6 +91,14 @@ python test_all.py
 ```
 All 6 tests should pass with green checkmarks (`[PASSED] ✅`).
 
+### 📊 Model Evaluation on Custom / Holdout Dataset
+To compute quantitative metrics (Accuracy, Precision, Recall, F1, and Confusion Matrix) across a dataset folder organized in `c0/` through `c9/`:
+```bash
+python evaluate.py --data path/to/dataset --model efficientnet
+# Or benchmark YOLO:
+python evaluate.py --data path/to/dataset --model yolo --limit 200
+```
+
 ---
 
 ## 📂 Project Directory Structure

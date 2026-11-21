@@ -396,6 +396,9 @@ if app_mode == "🖼️ Image Classification":
             m2.metric("Latency", f"{res['inference_ms']} ms")
             m3.metric("State", "Distracted ❌" if res["is_distracted"] else "Attentive ✅")
 
+            if res.get("low_confidence"):
+                st.warning("⚠️ Low confidence prediction - model is unsure. Check the probability chart before trusting this result.")
+
             # Activity Description Box
             st.markdown(f"""
             <div style='background: #FFF5F5; border-left: 4px solid #DC2626; padding: 12px 16px; border-radius: 6px; margin: 15px 0;'>
@@ -569,6 +572,9 @@ elif app_mode == "📹 Live Webcam Snapshot":
             m_cam1, m_cam2 = st.columns(2)
             m_cam1.metric("Confidence", f"{res['confidence']:.1f}%")
             m_cam2.metric("Latency", f"{res['inference_ms']} ms")
+
+            if res.get("low_confidence"):
+                st.warning("⚠️ Low confidence prediction - model is unsure. Check the probability chart before trusting this result.")
             
             st.markdown(f"""
             <div style='background: #FFF5F5; border-left: 4px solid #DC2626; padding: 12px 16px; border-radius: 6px; margin-top: 15px;'>
