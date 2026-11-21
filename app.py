@@ -239,9 +239,7 @@ with st.sidebar:
         [
             "🖼️ Image Classification",
             "🎥 Video File Analysis",
-            "📹 Live Webcam Snapshot",
-            "📊 Dataset Explorer & Stats",
-            "📚 Project Viva & Tech Guide"
+            "📹 Live Webcam Snapshot"
         ],
         label_visibility="visible"
     )
@@ -582,118 +580,6 @@ elif app_mode == "📹 Live Webcam Snapshot":
                 <span style='color: #475569;'> {res['description']}</span>
             </div>
             """, unsafe_allow_html=True)
-
-# ==========================================
-# 4. DATASET EXPLORER & STATISTICS MODE
-# ==========================================
-elif app_mode == "📊 Dataset Explorer & Stats":
-    st.markdown("""
-    <div class="hero-card">
-        <div>
-            <h1 class="hero-title">📊 State Farm <span>Dataset Analytics</span></h1>
-            <p class="hero-subtitle">Comprehensive exploratory analysis and class distributions from the official Kaggle dataset.</p>
-        </div>
-        <div class="status-badge">
-            <span class="status-dot"></span> 22,424 Images
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    if not DATASET_AVAILABLE:
-        st.warning("State Farm Dataset folder not detected in the workspace root.")
-    else:
-        if os.path.exists(DRIVER_CSV_PATH):
-            df_drivers = pd.read_csv(DRIVER_CSV_PATH)
-            
-            # Key Metric Cards
-            m1, m2, m3, m4 = st.columns(4)
-            m1.metric("Labeled Training Images", f"{len(df_drivers):,}")
-            m2.metric("Unique Driver Subjects", df_drivers['subject'].nunique())
-            m3.metric("Monitored Behaviors", df_drivers['classname'].nunique())
-            test_count = len(os.listdir(os.path.join(DATASET_ROOT, "imgs", "test"))) if os.path.exists(os.path.join(DATASET_ROOT, "imgs", "test")) else 79726
-            m4.metric("Test Holdout Set", f"{test_count:,}")
-
-            st.markdown("<hr style='margin: 20px 0; border: none; border-top: 1px solid #F1F5F9;'>", unsafe_allow_html=True)
-            col_d1, col_d2 = st.columns(2, gap="large")
-            with col_d1:
-                st.markdown('<div class="section-title">Distribution by Driving Behavior (c0 - c9)</div>', unsafe_allow_html=True)
-                class_counts = df_drivers['classname'].value_counts().sort_index().reset_index()
-                class_counts.columns = ["Class Code", "Image Count"]
-                class_counts["Activity"] = class_counts["Class Code"].map(lambda c: CLASS_MAP.get(c, {}).get("label", c))
-                st.bar_chart(class_counts.set_index("Activity")["Image Count"], color="#DC2626")
-
-            with col_d2:
-                st.markdown('<div class="section-title">Image Balance Across 26 Driver Subjects</div>', unsafe_allow_html=True)
-                driver_counts = df_drivers['subject'].value_counts().sort_index().reset_index()
-                driver_counts.columns = ["Driver ID", "Image Count"]
-                st.bar_chart(driver_counts.set_index("Driver ID")["Image Count"], color="#B91C1C")
-
-            # Data Table Preview
-            st.markdown('<div class="section-title">Ground Truth Manifest (driver_imgs_list.csv)</div>', unsafe_allow_html=True)
-            st.dataframe(df_drivers.head(15), use_container_width=True)
-
-# ==========================================
-# 5. PROJECT VIVA & ARCHITECTURE GUIDE
-# ==========================================
-else:
-    st.markdown("""
-    <div class="hero-card">
-        <div>
-            <h1 class="hero-title">📚 Project Viva & <span>Technical Blueprint</span></h1>
-            <p class="hero-subtitle">Comprehensive architectural summary, dataset taxonomy, and examiner question-and-answers.</p>
-        </div>
-        <div class="status-badge">
-            <span class="status-dot"></span> College Reference
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    ### 🎯 1. Problem Statement & Road Safety Urgency
-    - According to the **CDC (Centers for Disease Control and Prevention)**, distracted driving claims approximately **3,000 lives** and injures over **425,000 individuals** every single year.
-    - Traditional systems only monitor vehicle telemetry (speed, lane departure). This project implements an **In-Cabin Computer Vision Monitoring System** that monitors the driver directly to detect cognitive and manual distractions before an accident occurs.
-
-    ---
-    ### 🏷️ 2. The 10 Target Driving Classes (State Farm Kaggle Dataset)
-    """)
-
-    classes_data = []
-    for c_id in CLASS_KEYS:
-        info = CLASS_MAP[c_id]
-        classes_data.append({
-            "Class ID": c_id,
-            "Behavior Name": info["name"],
-            "Label": info["label"],
-            "Safety Classification": "❌ Distracted" if info["distracted"] else "✅ Safe Driving",
-            "Description": info["desc"]
-        })
-    st.table(pd.DataFrame(classes_data))
-
-    st.markdown("""
-    ---
-    ### 🧠 3. Machine Learning Architectures Explored
-    
-    1. **EfficientNet-B0 (10-Class Classifier)**:
-       - Uses Compound Scaling (depth, width, and resolution balanced).
-       - Pre-trained on ImageNet and fine-tuned on the State Farm dataset.
-       - Delivers high Top-1 accuracy with low parameter footprint (~4M parameters).
-    
-    2. **YOLO-Distraction (Real-Time Classifier)**:
-       - High throughput (~25-35 FPS on standard CPU, 100+ FPS on GPU).
-       - Optimized for live video streams and in-vehicle edge devices.
-    
-    3. **Custom CNN & VGG16 (Exploration Notebooks)**:
-       - Included in the `Training Notebooks/` folder demonstrating model comparison, layer freezing, and data augmentation experiments.
-    
-    ---
-    ### 🎓 4. High-Yield Viva Questions & Examiner Answers
-    - **Q: Why is transfer learning preferred over training from scratch?**
-      - *A: ImageNet backbones (VGG, ResNet, EfficientNet) have already learned rich low-level features (edges, textures, shapes). Fine-tuning on domain-specific driver images converges much faster and achieves higher accuracy without overfitting.*
-    - **Q: How does the system handle real-time video flicker?**
-      - *A: We implemented a temporal rolling window (deque) with majority voting across consecutive frames to prevent single-frame false alerts.*
-    - **Q: What is the real-world deployment mechanism?**
-      - *A: The model can be converted to ONNX or TensorFlow Lite (TFLite) for embedded hardware like Raspberry Pi, NVIDIA Jetson, or integrated into modern vehicle ADAS (Advanced Driver Assistance Systems).*
-    """)
 
 st.markdown("<hr style='margin: 30px 0 15px 0; border: none; border-top: 1px solid #FEE2E2;'>", unsafe_allow_html=True)
 st.markdown("""
